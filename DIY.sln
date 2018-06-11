@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiquidCrystalPi", "LiquidCrystalPi\LiquidCrystalPi.vcxproj", "{7DDE1A26-B857-4345-B8AB-55C38BF52972}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Release|ARM = Release|ARM
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7DDE1A26-B857-4345-B8AB-55C38BF52972}.Debug|ARM.ActiveCfg = Debug|ARM
+		{7DDE1A26-B857-4345-B8AB-55C38BF52972}.Debug|ARM.Build.0 = Debug|ARM
+		{7DDE1A26-B857-4345-B8AB-55C38BF52972}.Release|ARM.ActiveCfg = Release|ARM
+		{7DDE1A26-B857-4345-B8AB-55C38BF52972}.Release|ARM.Build.0 = Release|ARM
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6471C38E-701B-4CD5-BDC7-2489ACAAEB5D}
+	EndGlobalSection
+EndGlobal

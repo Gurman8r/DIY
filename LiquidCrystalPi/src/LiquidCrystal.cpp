@@ -29,7 +29,7 @@
 #define	FUNC_CDSHIFT_RL	0x04 // 
 
 // Delays
-#define DELAY_DISP		5
+#define DELAY_DISP		500
 
 // Row offsets
 static const int RowOff[4] = { 0x00, 0x40, 0x14, 0x54 };
@@ -111,11 +111,11 @@ namespace pi
 	
 	LiquidCrystal & LiquidCrystal::display(int value)
 	{
-		delay(DELAY_DISP);
+		delayMicroseconds(DELAY_DISP);
 
 		wiringPiI2CReadReg8(m_handle, (value | CTRL_DISPAY));
 
-		delay(DELAY_DISP);
+		delayMicroseconds(DELAY_DISP);
 
 		wiringPiI2CReadReg8(m_handle, (value & ~CTRL_DISPAY));
 

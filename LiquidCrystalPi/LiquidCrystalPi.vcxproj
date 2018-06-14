@@ -63,6 +63,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\FileSystem.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\LiquidCrystal.cpp" />
     <ClCompile Include="main.cpp" />
@@ -72,6 +73,7 @@
     <ClCompile Include="src\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\FileSystem.h" />
     <ClInclude Include="include\INIReader.h" />
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\LiquidCrystal.h" />

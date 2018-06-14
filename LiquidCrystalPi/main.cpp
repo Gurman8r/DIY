@@ -1,14 +1,13 @@
 #include <wiringPi.h>
-#include <unistd.h>
 #include <iostream>
-#include <fstream>
-#include <LiquidCrystal.h>
-#include <Timer.h>
-#include <Input.h>
-#include <Net.h>
-#include <StringUtilty.h>
-#include <OptionParser.h>
+#include <FileSystem.h>
 #include <INIReader.h>
+#include <Input.h>
+#include <LiquidCrystal.h>
+#include <Net.h>
+#include <OptionParser.h>
+#include <StringUtilty.h>
+#include <Timer.h>
 
 using namespace pi;
 
@@ -18,6 +17,7 @@ using namespace pi;
 
 LiquidCrystal	lcd(0x3f, 16, 2);
 Input			input;
+FileSystem		fs;
 
 // * * * * * * * * * * * * * * //
 
@@ -66,8 +66,6 @@ void netTest()
 	lcd.setCursor(0, 1);
 	const char* w0 = Net::getAddr("wlan0");
 	lcd.printf("w0 %s", (w0 ? w0 : "Offline"));
-
-	delay(1500);
 }
 
 void cursorTest()
@@ -114,44 +112,46 @@ void dirTest()
 	delay(1000);
 	lcd.clear();
 
-	char buf[1024];
-	if (getcwd(buf, sizeof(buf)))
+	const std::string dir = fs.getCwd();
+	lcd.printf("dir len: %i", dir.size());
+	delay(1000);
+	lcd.clear();
+
+	if (dir.size() <= 16)
 	{
-		std::string dir(buf);
-
-		lcd.printf("dir len: %i", dir.size());
-		delay(1000);
-		lcd.clear();
-
+		lcd.print(dir);
+	}
+	else
+	{
 		lcd.print(dir.substr(0, 16));
 		lcd.setCursor(0, 1);
 		lcd.print(dir.substr(16, 32));
-		
-		delay(1000);
-		lcd.clear();
 	}
 
 	delay(1000);
+	lcd.clear();
 }
 
 // * * * * * * * * * * * * * * //
 
-int loadConfig(const char* filename)
+int loadConfig(const std::string& filename)
 {
 	INIReader reader(filename);
-	if (reader.ParseError() > 0)
+	if (reader.ParseError() >= 0)
 	{
-		lcd.printf("%s", reader.Get("General", "test", "Error").c_str());
-
 		return EXIT_SUCCESS;
 	}
 	return EXIT_FAILURE;
 }
 
-// * * * * * * * * * * * * * * //
-
-int main(int argc, char** argv)
+int setup()
 {
+	if (loadConfig(fs.getRoot() + CONFIG_PATH))
+	{
+		std::cerr << "Failed Loading Config" << std::endl;
+		return EXIT_FAILURE;
+	}
+
 	if (wiringPiSetup() < 0)
 	{
 		std::cerr << "wiringPi setup failed" << std::endl;
@@ -164,23 +164,28 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
-	if (loadConfig(CONFIG_PATH))
-	{
-		// Error
-		std::cerr << "Failed Loading Config" << std::endl;
-		return EXIT_FAILURE;
-	}
-
 	for (int i = 0; i < Input::MAX_BUTTON; i++)
 	{
 		input.setPin(i, INPUT, PUD_DOWN);
+	}
+
+	return EXIT_SUCCESS;
+}
+
+// * * * * * * * * * * * * * * //
+
+int main(int argc, char** argv)
+{
+	if (setup())
+	{
+		return EXIT_FAILURE;
 	}
 
 	lcd.print("    Welcome!    ");
 	delay(1000);
 	lcd.clear();
 	{
-		
+		dirTest();
 	}
 	lcd.clear();
 	lcd.print("    Goodbye!    ");

@@ -20,6 +20,7 @@
     <ClCompile Include="src\StringUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\FileSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Input.h">
@@ -42,6 +43,7 @@
     </ClInclude>
     <ClInclude Include="include\OptionParser.h" />
     <ClInclude Include="include\INIReader.h" />
+    <ClInclude Include="include\FileSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

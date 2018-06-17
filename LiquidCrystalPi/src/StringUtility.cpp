@@ -11,6 +11,18 @@
 
 namespace pi
 {
+	bool Str::IsInt(const std::string & s)
+	{
+		// https://stackoverflow.com/questions/2844817/how-do-i-check-if-a-c-string-is-an-int
+		if (s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) 
+			return false;
+
+		char * p;
+		strtol(s.c_str(), &p, 10);
+
+		return (*p == 0);
+	}
+
 	std::string	Str::Replace(const std::string& src, const std::string& find, const std::string& replace)
 	{
 		if (src == "" || find == "")

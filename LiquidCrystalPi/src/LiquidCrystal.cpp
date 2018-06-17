@@ -31,6 +31,17 @@
 // Delays
 #define DELAY_DISP		500
 
+// Options
+#define OPT_Increment		0x02     
+#define OPT_Display_Shift	0x01 
+#define OPT_Enable_Display	0x04
+#define OPT_Enable_Cursor	0x02 
+#define OPT_Enable_Blink	0x01  
+//#define OPT_Display_Shift	0x08 
+#define OPT_Shift_Right		0x04
+#define OPT_2_Lines			0x08
+#define OPT_5x10_Dots		0x04
+
 // Row offsets
 static const int RowOff[4] = { 0x00, 0x40, 0x14, 0x54 };
 
@@ -75,14 +86,15 @@ namespace pi
 	{
 		if ((m_handle = wiringPiI2CSetup(m_address)) >= 0)
 		{
-			sendCommand(0x33);
-			sendCommand(0x32);
-			sendCommand(0x06);
+			//sendCommand(CMD_FUNC_SET | OPT_2_Lines);
+			//sendCommand(CMD_DISP_CTL | OPT_Enable_Display | OPT_Enable_Cursor);
+			//sendCommand(CMD_CLEAR);
+			//sendCommand(CMD_ENTRY | OPT_Increment | OPT_Display_Shift);\
 
-			//display(0);
-			//delay(10);
-			//display(1);
-			
+			display(0);
+			delay(10);
+			display(1);
+
 			clear();
 			home();
 			

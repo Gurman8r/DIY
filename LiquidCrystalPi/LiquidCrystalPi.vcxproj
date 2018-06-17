@@ -43,7 +43,8 @@
       <LibraryDependencies>wiringPi</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>chmod u+x run.sh</Command>
+      <Command>
+      </Command>
       <Message>
       </Message>
     </RemotePostBuildEvent>
@@ -53,7 +54,8 @@
       <LibraryDependencies>wiringPi</LibraryDependencies>
     </Link>
     <RemotePostBuildEvent>
-      <Command>chmod u+x run.sh</Command>
+      <Command>
+      </Command>
       <Message>
       </Message>
     </RemotePostBuildEvent>
@@ -63,21 +65,29 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Axis.cpp" />
     <ClCompile Include="src\FileSystem.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\LiquidCrystal.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Net.cpp" />
+    <ClCompile Include="src\OLED.cpp" />
+    <ClCompile Include="src\ssd1306_i2c.cpp" />
     <ClCompile Include="src\StringUtility.cpp" />
     <ClCompile Include="src\TimePoint.cpp" />
     <ClCompile Include="src\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Axis.h" />
     <ClInclude Include="include\FileSystem.h" />
     <ClInclude Include="include\INIReader.h" />
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\LiquidCrystal.h" />
     <ClInclude Include="include\Net.h" />
+    <ClInclude Include="include\OLED.h" />
+    <ClInclude Include="include\OLED_Commands.h" />
+    <ClInclude Include="include\OLED_Fonts.h" />
+    <ClInclude Include="include\ssd1306_i2c.h" />
     <ClInclude Include="include\TimePoint.h" />
     <ClInclude Include="include\Timer.h" />
     <ClInclude Include="include\StringUtilty.h" />
@@ -85,7 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="data\config.ini" />
-    <None Include="run.sh" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>

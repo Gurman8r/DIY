@@ -21,6 +21,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FileSystem.cpp" />
+    <ClCompile Include="src\ssd1306_i2c.cpp" />
+    <ClCompile Include="src\OLED.cpp" />
+    <ClCompile Include="src\Axis.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Input.h">
@@ -44,6 +47,11 @@
     <ClInclude Include="include\OptionParser.h" />
     <ClInclude Include="include\INIReader.h" />
     <ClInclude Include="include\FileSystem.h" />
+    <ClInclude Include="include\ssd1306_i2c.h" />
+    <ClInclude Include="include\OLED.h" />
+    <ClInclude Include="include\OLED_Fonts.h" />
+    <ClInclude Include="include\OLED_Commands.h" />
+    <ClInclude Include="include\Axis.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -55,6 +63,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="data\config.ini" />
-    <None Include="run.sh" />
   </ItemGroup>
 </Project>

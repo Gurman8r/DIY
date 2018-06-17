@@ -1,6 +1,8 @@
 #ifndef _INPUT_H_
 #define _INPUT_H_
 
+#include <Axis.h>
+
 namespace pi
 {
 	class Input
@@ -21,6 +23,7 @@ namespace pi
 		Input();
 		~Input();
 
+		//void setAxis(const std::string& name, int pin, int mode, int pud);
 		void setPin(int pin, int mode, int pud = 0);
 
 		void beginStep();

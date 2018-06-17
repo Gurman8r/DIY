@@ -10,6 +10,8 @@ namespace pi
 	class Str
 	{
 	public:
+		static bool IsInt(const std::string& s);
+
 		static std::string	Replace(const std::string& src, const std::string& find, const std::string& replace);
 		static std::string	Sprintf(const std::string fmt, ...);
 

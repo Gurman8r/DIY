@@ -9,7 +9,7 @@ namespace pi
 	{
 	public:
 		LiquidCrystal();
-		LiquidCrystal(int address, int getW, int getH);
+		LiquidCrystal(int address, int width, int height);
 		LiquidCrystal(const LiquidCrystal& copy);
 		~LiquidCrystal();
 

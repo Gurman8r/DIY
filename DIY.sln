@@ -5,16 +5,34 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiquidCrystalPi", "LiquidCrystalPi\LiquidCrystalPi.vcxproj", "{7DDE1A26-B857-4345-B8AB-55C38BF52972}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pibrary", "Pibrary\Pibrary.vcxproj", "{42214875-FBB1-4B0C-9161-5992F0352A25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|ARM = Release|ARM
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7DDE1A26-B857-4345-B8AB-55C38BF52972}.Debug|ARM.ActiveCfg = Debug|ARM
 		{7DDE1A26-B857-4345-B8AB-55C38BF52972}.Debug|ARM.Build.0 = Debug|ARM
+		{7DDE1A26-B857-4345-B8AB-55C38BF52972}.Debug|x64.ActiveCfg = Debug|ARM
+		{7DDE1A26-B857-4345-B8AB-55C38BF52972}.Debug|x86.ActiveCfg = Debug|ARM
 		{7DDE1A26-B857-4345-B8AB-55C38BF52972}.Release|ARM.ActiveCfg = Release|ARM
 		{7DDE1A26-B857-4345-B8AB-55C38BF52972}.Release|ARM.Build.0 = Release|ARM
+		{7DDE1A26-B857-4345-B8AB-55C38BF52972}.Release|x64.ActiveCfg = Release|ARM
+		{7DDE1A26-B857-4345-B8AB-55C38BF52972}.Release|x86.ActiveCfg = Release|ARM
+		{42214875-FBB1-4B0C-9161-5992F0352A25}.Debug|ARM.ActiveCfg = Debug|ARM
+		{42214875-FBB1-4B0C-9161-5992F0352A25}.Debug|ARM.Build.0 = Debug|ARM
+		{42214875-FBB1-4B0C-9161-5992F0352A25}.Debug|x64.ActiveCfg = Debug|ARM
+		{42214875-FBB1-4B0C-9161-5992F0352A25}.Debug|x86.ActiveCfg = Debug|ARM
+		{42214875-FBB1-4B0C-9161-5992F0352A25}.Release|ARM.ActiveCfg = Release|ARM
+		{42214875-FBB1-4B0C-9161-5992F0352A25}.Release|ARM.Build.0 = Release|ARM
+		{42214875-FBB1-4B0C-9161-5992F0352A25}.Release|x64.ActiveCfg = Release|ARM
+		{42214875-FBB1-4B0C-9161-5992F0352A25}.Release|x86.ActiveCfg = Release|ARM
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

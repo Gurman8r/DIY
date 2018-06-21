@@ -23,7 +23,7 @@
     <ClCompile Include="src\FileSystem.cpp" />
     <ClCompile Include="src\ssd1306_i2c.cpp" />
     <ClCompile Include="src\OLED.cpp" />
-    <ClCompile Include="src\Axis.cpp" />
+    <ClCompile Include="src\MCP23017.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Input.h">
@@ -51,7 +51,7 @@
     <ClInclude Include="include\OLED.h" />
     <ClInclude Include="include\OLED_Fonts.h" />
     <ClInclude Include="include\OLED_Commands.h" />
-    <ClInclude Include="include\Axis.h" />
+    <ClInclude Include="include\MCP23017.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

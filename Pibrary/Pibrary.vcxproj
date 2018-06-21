@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{7dde1a26-b857-4345-b8ab-55c38bf52972}</ProjectGuid>
+    <ProjectGuid>{42214875-fbb1-4b0c-9161-5992f0352a25}</ProjectGuid>
     <Keyword>Linux</Keyword>
-    <RootNamespace>LiquidCrystalPi</RootNamespace>
+    <RootNamespace>Pibrary</RootNamespace>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <ApplicationType>Linux</ApplicationType>
     <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
@@ -32,12 +32,6 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Link>
       <LibraryDependencies>wiringPi</LibraryDependencies>
@@ -61,45 +55,30 @@
     </RemotePostBuildEvent>
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\FileSystem.cpp" />
-    <ClCompile Include="src\Input.cpp" />
-    <ClCompile Include="src\LiquidCrystal.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\FileSystem.cpp" />
+    <ClCompile Include="src\LiquidCrystal_I2C.cpp" />
     <ClCompile Include="src\MCP23017.cpp" />
-    <ClCompile Include="src\Net.cpp" />
-    <ClCompile Include="src\OLED.cpp" />
-    <ClCompile Include="src\ssd1306_i2c.cpp" />
-    <ClCompile Include="src\StringUtility.cpp" />
     <ClCompile Include="src\TimePoint.cpp" />
     <ClCompile Include="src\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\FileSystem.h" />
     <ClInclude Include="include\INIReader.h" />
-    <ClInclude Include="include\Input.h" />
-    <ClInclude Include="include\LiquidCrystal.h" />
+    <ClInclude Include="include\LiquidCrystal_I2C.h" />
     <ClInclude Include="include\MCP23017.h" />
-    <ClInclude Include="include\Net.h" />
-    <ClInclude Include="include\OLED.h" />
-    <ClInclude Include="include\OLED_Commands.h" />
-    <ClInclude Include="include\OLED_Fonts.h" />
-    <ClInclude Include="include\ssd1306_i2c.h" />
     <ClInclude Include="include\TimePoint.h" />
     <ClInclude Include="include\Timer.h" />
-    <ClInclude Include="include\StringUtilty.h" />
-    <ClInclude Include="include\OptionParser.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\config.ini" />
+    <None Include="config.ini" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

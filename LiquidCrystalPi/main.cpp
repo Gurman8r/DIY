@@ -1,15 +1,15 @@
 #include <wiringPi.h>
 #include <iostream>
+
 #include <FileSystem.h>
 #include <INIReader.h>
 #include <Input.h>
 #include <LiquidCrystal.h>
 #include <Net.h>
-#include <OptionParser.h>
-#include <StringUtilty.h>
-#include <Timer.h>
 #include <OLED.h>
 #include <ssd1306_i2c.h>
+#include <StringUtilty.h>
+#include <Timer.h>
 
 using namespace pi;
 
@@ -25,12 +25,13 @@ using namespace pi;
 #define PIN_N 5
 
 int version;
-int speed;
+int loadSpd;
 int mode;
 
 FileSystem		fs;
-LiquidCrystal	lcd(0x3f, 16, 2);
 Input			input;
+LiquidCrystal	lcd(0x3f, 16, 2);
+LiquidCrystal	display(0x20, 16, 2);
 OLED			oled(OLED_VCC_SWITCHCAP, 0x3C, 128, 64);
 
 // * * * * * * * * * * * * * * //
@@ -38,15 +39,18 @@ OLED			oled(OLED_VCC_SWITCHCAP, 0x3C, 128, 64);
 void showLoading()
 {
 	lcd.clear();
-	lcd.print("Loading...");
-	lcd.setCursor(0, 1);
-	for (int i = 0; i < 16; i++)
+	if (loadSpd > 0)
 	{
-		lcd.print((char)255);
-		delay(speed);
+		lcd.print("Loading...");
+		lcd.setCursor(0, 1);
+		for (int i = 0; i < 16; i++)
+		{
+			lcd.print((char)255);
+			delay(loadSpd);
+		}
+		delay(500);
+		lcd.clear();
 	}
-	delay(500);
-	lcd.clear();
 }
 
 void demo()
@@ -174,18 +178,18 @@ void oledDemo1()
 	lcd.clear().print("    Adafruit    ");
 	ssd1306_display(); //Adafruit logo is visible
 	ssd1306_clearDisplay();
-	delay(5000);
+	delay(2500);
 
 	lcd.clear().print("  Draw String   ");
 	const char* text = "This is demo for SSD1306 i2c driver for Raspberry Pi";
 	ssd1306_drawString(text);
 	ssd1306_display();
-	delay(5000);
+	delay(1500);
 
 	lcd.clear().print("  Scroll Right  ");
 	ssd1306_dim(1);
 	ssd1306_startscrollright(00, 0xFF);
-	delay(5000);
+	delay(1500);
 
 	lcd.clear().print("   Rectangles   ");
 	ssd1306_clearDisplay();
@@ -199,38 +203,46 @@ void oledDemo1()
 void oledDemo2()
 {
 	lcd.print("  OLED Demo: 2  ");
+	delay(1500);
+
+	lcd.clear();
+	lcd.printf("W: %d", oled.getW());
+	lcd.setCursor(0, 1);
+	lcd.printf("H: %d", oled.getH());
+	delay(1500);
 
 	if (oled.setup())
 	{
-		//lcd.clear().print("setup");
-		//oled.display();
-		//oled.clear();
-		//delay(1000);
+		lcd.clear().print("      Setup     ");
+		oled.display(); //Adafruit logo is visible
+		oled.clear();
+		delay(2500);
 
-		//lcd.clear().print("setCursor");
-		//oled.setCursor(0, 0);
-		//delay(1000);
+		lcd.clear().print("   Set Cursor   ");
+		oled.setCursor(0, 0);
+		delay(1500);
 
-		lcd.clear().print("drawString");
+		lcd.clear().print("  Draw String   ");
 		oled.drawString("Hello, World!");
-		delay(1000);
+		oled.display();
+		delay(1500);
 
-		lcd.clear().print("display");
-		//oled.display();
-		//delay(5000);
-		//Timer timer;
-		//timer.start();
-		//uint64_t ms;
-		//while ((ms = timer.elapsed().millis()) < 5000)
-		//{
-		//	oled.display();
-		//	delay(16);
-		//}
-		//delay(1000);
+		lcd.clear().print("      Timer     ");
+		Timer timer;
+		timer.start();
+		int ms;
+		while ((ms = (int)timer.elapsed().millis()) < 5000)
+		{
+			lcd.setCursor(0, 1).printf("mS: %d", ms);
+			oled.clear();
+			oled.drawString("Millis: " + std::to_string(ms));
+			oled.display();
+		}
 
 		lcd.clear().print("clear");
 		oled.clear();
-		delay(1000);
+		oled.display();
+		delay(1500);
 	}
 	else
 	{
@@ -304,63 +316,59 @@ void scrollTest()
 	lcd.clear();
 }
 
-void inputTest()
+void rotaryTest()
 {
-	const std::string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	lcd.clear().print("Rotary Encoder");
+	delay(1500);
+	lcd.clear();
 
-	int index = 0;
-	bool update = true;
-
-	while (true)
+	bool running = true;
+	while (running)
 	{
-		if (update)
-		{
-			lcd.print(alpha);
-			update = false;
-		}
-
 		input.beginStep();
 		{
-			if (input.getButtonDown(PIN_L))
+			//for (int i = 0; i < Input::MAX_BUTTON; i++)
+			//{
+			//	if (input.getButtonDown(i))
+			//	{
+			//		lcd.clear().printf("Press: %d", i);
+			//		delay(1000);
+			//		lcd.clear();
+			//		running = false;
+			//		break;
+			//	}
+			//}
+
+			if (!input.getButtonDown(7))
 			{
-				// left
-				update = true;
-			}
-			else if (input.getButtonDown(PIN_R))
-			{
-				// right
-				update = true;
-			}
-			else if (input.getButtonDown(PIN_N))
-			{
-				break;
+				lcd.clear().print("Press!");
+				delay(1000);
+				lcd.clear();
 			}
 		}
 		input.endStep();
-
-		delay(10);
 	}
 }
 
 // * * * * * * * * * * * * * * //
 
-int loadConfig(const std::string& filename)
+int loadINI(const std::string& filename)
 {
-	INIReader reader(filename);
-	if (reader.ParseError() >= 0)
+	INIReader ini(filename);
+	if (ini.ParseError() >= 0)
 	{
-		version = reader.GetInteger("General", "version", 0);
-		speed	= reader.GetInteger("General", "speed", 100);
-		mode	= reader.GetInteger("General", "mode", 0);
+		version	= ini.GetInteger("General", "version", 0);
+		loadSpd	= ini.GetInteger("General", "loadSpd", 100);
+		mode	= ini.GetInteger("General", "mode", 0);
 
 		return EXIT_SUCCESS;
 	}
 	return EXIT_FAILURE;
 }
 
-int setup()
+int setup(int argc, char** argv)
 {
-	if (loadConfig(fs.getRoot() + CONFIG_PATH))
+	if (loadINI(fs.getRoot() + CONFIG_PATH))
 	{
 		std::cerr << "Failed Loading Config" << std::endl;
 		return EXIT_FAILURE;
@@ -368,14 +376,32 @@ int setup()
 
 	if (wiringPiSetup() < 0)
 	{
-		std::cerr << "wiringPi setup failed" << std::endl;
+		std::cerr << "Failed Loading WiringPi" << std::endl;
 		return EXIT_FAILURE;
 	}
 
 	if (!lcd.setup())
 	{
-		std::cerr << "LiquidCrystal setup failed" << std::endl;
+		std::cerr << "Failed Loading LiquidCrystal" << std::endl;
 		return EXIT_FAILURE;
+	}
+
+	if (!oled.setup())
+	{
+		std::cerr << "Failed Loading OLED" << std::endl;
+		return EXIT_FAILURE;
+	}
+
+	if (!display.setup())
+	{
+		std::cerr << "Failed Loading LiquidCrystal" << std::endl;
+		lcd.clear().print("Error: Display 2");
+		delay(2500);
+	}
+	else
+	{
+		display.clear();
+		display.print("Hello, World!");
 	}
 
 	for (int i = 0; i < Input::MAX_BUTTON; i++)
@@ -390,12 +416,14 @@ int setup()
 
 int main(int argc, char** argv)
 {
-	if (setup())
+	if (setup(argc, argv))
 	{
 		return EXIT_FAILURE;
 	}
 
 	showLoading();
+
+	oled.reset().display().clear();
 
 	lcd.printf("    Mode: %d     ", mode);
 	delay(1500);
@@ -425,7 +453,7 @@ int main(int argc, char** argv)
 			scrollTest();
 			break;
 		case 7:
-			inputTest();
+			rotaryTest();
 			break;
 		}
 	}

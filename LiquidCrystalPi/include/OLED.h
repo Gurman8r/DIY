@@ -54,6 +54,7 @@ namespace pi
 		OLED& drawString(const std::string& value);
 		OLED& invert(bool value);
 		OLED& sendCommand(uint value);
+		OLED& reset();
 		OLED& setCursor(int xv, int yv);
 		OLED& setX(int value);
 		OLED& setY(int value);
@@ -61,7 +62,15 @@ namespace pi
 
 		inline int bufSize() const
 		{
-			return ((m_w * m_h) / 8);
+			return (m_w * m_h / 8);
+		}
+		inline int getW() const
+		{
+			return m_w;
+		}
+		inline int getH() const
+		{
+			return m_h;
 		}
 
 	private:
@@ -71,12 +80,12 @@ namespace pi
 		int m_h;
 
 		int m_buffer[OLED_W * OLED_H / 8];
-		int m_handle	= -1;
-		int m_textSize	= 1;
-		int m_wrap		= 0;
-		int m_contrast	= 0;
-		int m_x			= 0;
-		int m_y			= 0;
+		int m_handle;
+		int m_textSize;
+		int m_wrap;
+		int m_contrast;
+		int m_x;
+		int m_y;
 	};
 }
 

@@ -1,8 +1,6 @@
 #ifndef _INPUT_H_
 #define _INPUT_H_
 
-#include <Axis.h>
-
 namespace pi
 {
 	class Input
@@ -16,6 +14,8 @@ namespace pi
 			Pin3,
 			Pin4,
 			Pin5,
+			Pin6,
+			Pin7,
 			MAX_BUTTON
 		};
 

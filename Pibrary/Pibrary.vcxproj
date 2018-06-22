@@ -58,20 +58,29 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Args.cpp" />
+    <ClCompile Include="src\Console.cpp" />
+    <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\FileSystem.cpp" />
     <ClCompile Include="src\LiquidCrystal_I2C.cpp" />
     <ClCompile Include="src\MCP23017.cpp" />
     <ClCompile Include="src\TimePoint.cpp" />
     <ClCompile Include="src\Timer.cpp" />
+    <ClCompile Include="src\StringUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Args.h" />
+    <ClInclude Include="include\Config.h" />
+    <ClInclude Include="include\Console.h" />
     <ClInclude Include="include\FileSystem.h" />
     <ClInclude Include="include\INIReader.h" />
     <ClInclude Include="include\LiquidCrystal_I2C.h" />
     <ClInclude Include="include\MCP23017.h" />
     <ClInclude Include="include\TimePoint.h" />
     <ClInclude Include="include\Timer.h" />
+    <ClInclude Include="include\Input.h" />
+    <ClInclude Include="include\StringUtilty.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />

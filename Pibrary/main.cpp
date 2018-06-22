@@ -2,10 +2,15 @@
 #include <wiringPiI2C.h>
 #include <iostream>
 #include <vector>
+#include <unordered_map>
+#include <Args.h>
+#include <Console.h>
 #include <FileSystem.h>
 #include <INIReader.h>
+#include <Input.h>
 #include <LiquidCrystal_I2C.h>
 #include <MCP23017.h>
+#include <StringUtilty.h>
 #include <Timer.h>
 
 using namespace pi;
@@ -54,6 +59,7 @@ struct Data
 	int spd;
 	int dir;
 	int pgm;
+	int dur;
 
 	friend std::ostream& operator<<(std::ostream& out, const Data& rhs)
 	{
@@ -67,9 +73,11 @@ struct Data
 // * * * * * * * * * * * * * * //
 
 Data				data;
+Console				console(std::cout, std::cin, std::cerr);
 FileSystem			fs;
-MCP23017			mcp(0x20);
+Input				input;
 LiquidCrystal_I2C	lcd(0x3f, 16, 2);
+MCP23017			mcp(0x20);
 
 // * * * * * * * * * * * * * * //
 
@@ -86,59 +94,38 @@ void pause()
 	lcd.blink(false);
 }
 
-void testAB(int a, int b, bool p = true)
+void testFlash()
 {
-	if(p)
+	auto flash = [](int i, unsigned n, unsigned ms)
 	{
-		lcd.clear();
-	}
-	
-	lcd.setPos(0, 0).printf("A: %d", a);
-	lcd.setPos(0, 1).printf(B2BIN_PAT, B2BIN(a));
-	mcp.writeA(a);
+		mcp.writeA(i & 1 ? 0 : 0xFF).writeB(i & 2 ? 0 : 0xFF);
+		delay(ms);
+		mcp.writeAB(0);
+		delay(ms);
+	};
 
-	lcd.setPos(8, 0).printf("B: %d", b);
-	lcd.setPos(8, 1).printf(B2BIN_PAT, B2BIN(b));
-	mcp.writeB(b);
-
-	lcd.setPos(lcd.getW() - 1, 0).printf("%d", mcp[MCP23017::F_Reverse]);
-	
-	if (p)
+	lcd.clear().printf("Flash");
+	for (int i = -1; i < 3; i++)
 	{
-		pause();
+		lcd.clear().printf("Flash: %d", i);
+		flash(i, 4, 250);
+		delay(1000);
 	}
-}
-
-void testA(int value)
-{
-	lcd.clear().printf("A: %d", value);
-	lcd.setPos(0, 1).printf(B2BIN_PAT, B2BIN(value));
-	mcp.writeA(value);
-	pause();
-}
-
-void testB(int value)
-{
-	lcd.clear().printf("B: %d", value);
-	lcd.setPos(0, 1).printf(B2BIN_PAT, B2BIN(value));
-	mcp.writeB(value);
-	pause();
 }
 
 void testCounter()
 {
-	// Counter
+	lcd.clear().printf("Counter");
+
 	mcp[0] = data.dir;
 	mcp.clearAB();
-	lcd.clear().print("...");
 
 	Timer timer;
 	timer.start();
-
-	for (int i = 0; i < 0xff; i++)
+	for (int i = 0; i < 0xFF; i++)
 	{
 		mcp.writeA(i).writeB(i);
-		delay(50);
+		delay(data.spd);
 	}
 	
 	for (int i = 0, imax = 0xFFFF; i <= imax; i++)
@@ -150,52 +137,45 @@ void testCounter()
 	lcd.clear().printf("Time: %d", timer.elapsed().millis());
 	delay(1500);
 
-	mcp.writeAB(0);
-	delay(500);
-	mcp.writeAB(0xFFFF);
-	delay(500);
-	mcp.writeAB(0);
-	delay(500);
-	mcp.writeAB(0xFFFF);
-	delay(500);
-	mcp.writeAB(0);
-	delay(500);
-	mcp.writeAB(0xFFFF);
-	delay(500);
-	mcp.writeAB(0);
-	delay(1500);
-	mcp.writeAB(0);
+	
 }
 
 void testValues()
 {
-	lcd.clear().print("Testing Low/High");
-	lcd.setPos(0, 1).printf("Speed: %dms", data.spd);
+	auto testAB = [](int a, int b)
+	{
+		lcd.clear();
+
+		lcd.setPos(0, 0).printf("A: %d", a);
+		lcd.setPos(0, 1).printf(B2BIN_PAT, B2BIN(a));
+		mcp.writeA(a);
+
+		lcd.setPos(8, 0).printf("B: %d", b);
+		lcd.setPos(8, 1).printf(B2BIN_PAT, B2BIN(b));
+		mcp.writeB(b);
+
+		lcd.setPos(lcd.getW() - 1, 0).printf("%d", mcp[MCP23017::F_Reverse]);
+	};
+
+	lcd.clear().printf("Values");
 	mcp.clearAB();
-	pause();
+	delay(1000);
 
-	// None
-	mcp[MCP23017::F_Reverse] = 0;
-	testAB(0b11100011, 0b11100011);
-
-	// A
-	mcp[MCP23017::F_Reverse] = 1;
-	testAB(0b11100011, 0b11100011);
-
-	// B
-	mcp[MCP23017::F_Reverse] = 2;
-	testAB(0b11100011, 0b11100011);
-
-	// AB
-	mcp[MCP23017::F_Reverse] = 4;
-	testAB(0b11100011, 0b11100011);
+	for (int n = 0; n < 5; n++)
+	{
+		for (int i = -1; i < 3; i++)
+		{
+			mcp[MCP23017::F_Reverse] = i;
+			testAB(0b11110000, 0b11110000);
+			delay(250);
+		}
+	}
 
 }
 
 void testKnight()
 {
 	std::vector<int> values = {
-		//0x0000,
 		0x0001,
 		0x0002,
 		0x0004,
@@ -220,9 +200,8 @@ void testKnight()
 	Timer timer;
 	timer.start();
 	
-	int64_t ms;
-
-	while ((ms = timer.elapsed().millis()) < 10000)
+	int64_t el;
+	while ((el = timer.elapsed().seconds()) < data.dur)
 	{
 		for (i = values.begin(); i != values.end(); i++)
 		{
@@ -238,6 +217,69 @@ void testKnight()
 	}
 }
 
+void testDip()
+{
+	lcd.clear().print("Dip\'");
+
+	Timer	timer;
+	int64_t ms;
+	char	value = 0, state;
+
+	timer.start();
+	while ((ms = timer.elapsed().millis()) < 20000)
+	{
+		input.beginStep();
+		{
+			if (value != (state = (char)input.getState()))
+			{
+				value = state;
+				lcd.clear().printf("Value: %d", value);
+				lcd.setPos(0, 1).printf(B2BIN_PAT, B2BIN(value));
+				mcp.writeA(value).writeB(value);
+			}
+		}
+		input.endStep();
+		delay(10);
+	}
+
+}
+
+void testSegment()
+{
+	lcd.clear().print("Segment");
+	delay(1000);
+
+	std::vector<int> table = { 
+		0b00111111, // 0
+		0b00000110, // 1
+		0b01011011, // 2
+		0b01001111, // 3
+		0b01100110, // 4
+		0b01101101, // 5
+		0b01111101, // 6
+		0b00100111, // 7
+		0b01111111, // 8
+		0b01101111, // 9
+		0b01110111, // A
+		0b01111100, // B
+		0b00111001, // C
+		0b01011110, // D
+		0b01111001, // E
+		0b01110001, // F
+	};
+
+	for (int i : table)
+	{
+		lcd.clear().printf("%d", i);
+		lcd.setPos(0, 1).printf(B2BIN_PAT, B2BIN(i));
+		mcp.writeA(i).writeB(i);
+		delay(1000);
+	}
+
+	mcp.clearAB();
+	delay(1000);
+}
+
 // * * * * * * * * * * * * * * //
 
 int loadConfig(const std::string& filename)
@@ -249,6 +291,7 @@ int loadConfig(const std::string& filename)
 		data.spd = ini.GetInteger("Misc", "spd", 100);
 		data.dir = ini.GetInteger("Misc", "dir", 0);
 		data.pgm = ini.GetInteger("Misc", "pgm", 0);
+		data.dur = ini.GetInteger("Misc", "dur", 5);
 		return EXIT_SUCCESS;
 	}
 	return EXIT_FAILURE;
@@ -280,6 +323,17 @@ int setup()
 		return EXIT_FAILURE;
 	}
 
+	if (!console.setup())
+	{
+		std::cerr << "Console Setup Failed" << std::endl;
+		return EXIT_FAILURE;
+	}
+
+	for (int i = 0; i < Input::MAX_PIN; i++)
+	{
+		input.setPin(i, INPUT, PUD_DOWN);
+	}
+
 	return EXIT_SUCCESS;
 }
 
@@ -297,14 +351,30 @@ int main(int argc, char** argv)
 	mcp.writeReg8(MCP23017::IODIRA, 0).clearA();
 	mcp.writeReg8(MCP23017::IODIRB, 0).clearB();
 
-	testKnight();
-	//testCounter();
-	//testValues();
+	input.capture();
 
-	//lcd.clear().print("    Goodbye!    ");
-	//delay(1000);
-	//mcp.clearA().clearB();
-	//lcd.clear();
+	const char state = (char)input.getState();
+
+	lcd.clear();
+	lcd.setPos(4, 0).printf("Mode: %d", state);
+	lcd.setPos(4, 1).printf(B2BIN_PAT, B2BIN(state));
+	delay(1000);
+
+	switch (input.getState())
+	{
+	case 0b0000: testFlash();	break;
+	case 0b0001: testKnight();	break;
+	case 0b0010: testValues();	break;
+	case 0b0011: testCounter();	break;
+	case 0b0100: testDip();		break;
+	case 0b0101: testSegment();	break;
+	default:
+		lcd.clear().print("    Goodbye!    ");
+		delay(1000);
+		mcp.clearA().clearB();
+		lcd.clear();
+		break;
+	}
 
 	return EXIT_SUCCESS;
 }

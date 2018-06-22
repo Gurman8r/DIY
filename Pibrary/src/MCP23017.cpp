@@ -71,7 +71,7 @@ namespace pi
 
 	MCP23017 & MCP23017::writeA(int value)
 	{
-		if ((*this)[F_Reverse] == 1 || (*this)[F_Reverse] == 4)
+		if ((*this)[F_Reverse] & 1)
 		{
 			return writeReg8(MCP23017::OLATA, reverseBits(value));
 		}
@@ -80,7 +80,7 @@ namespace pi
 			 
 	MCP23017 & MCP23017::writeB(int value)
 	{
-		if ((*this)[F_Reverse] == 2 || (*this)[F_Reverse] == 4)
+		if ((*this)[F_Reverse] & 2)
 		{
 			return writeReg8(MCP23017::OLATB, reverseBits(value));
 		}
